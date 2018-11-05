@@ -12,6 +12,13 @@ public class MyDirectedGraph implements A3Graph {
     public void addVertex(int vertex) {
 		if (nrOfVert == 0) {
     	gList.add(vertex);
+    	nrOfVert++;
+		}
+		else if(gList.get(nrOfVert - 1) > vertex) {
+			System.err.println("");
+		}
+		else {
+			gList.add(e)
 		}
 
     }
