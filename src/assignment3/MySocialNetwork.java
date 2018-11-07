@@ -4,7 +4,11 @@ import java.util.List;
 
 public class MySocialNetwork extends MyUndirectedGraph implements A3SocialNetwork {
 
-    @Override
+    public MySocialNetwork(int vertices) {
+		super(vertices);
+	}
+
+	@Override
     public int numberOfPeopleAtFriendshipDistance(int vertexIndex, int distance) {
 	// TODO Auto-generated method stub
 	return 0;
