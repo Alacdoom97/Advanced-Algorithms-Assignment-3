@@ -8,12 +8,15 @@ public class MyUndirectedGraph implements A3Graph {
 	int vertexCount;
 	int edgesCount = 0;
 	List<Integer> edges[];
+	List<Integer> cloneEuler[];
+	List<Integer> eulerPath;
 	List<List<Integer>> aList;
 	List<List<Integer>> cc;
 
 	public MyUndirectedGraph(int vertices) {
 		vertexCount = vertices;
 		edges = new LinkedList[vertices];
+		eulerPath = new LinkedList();
 		cc = new LinkedList();
 		aList = new ArrayList<>(vertices);
 		int temp = 0;
@@ -49,10 +52,25 @@ public class MyUndirectedGraph implements A3Graph {
 
 	@Override
 	public boolean isConnected() {
-		for (int i = 0; i < vertexCount; i++) {
-			if (!edges[i].isEmpty()) {
-				continue;
-			} else {
+		Boolean visited[] = new Boolean[vertexCount];
+		int i = 0;
+		while (i < vertexCount) {
+			visited[i] = false;
+		}
+
+		for (i = 0; i < vertexCount; i++) {
+			if (edges[i].size() != 0) {
+				break;
+			}
+		}
+
+		if (i == vertexCount) {
+			return true;
+		}
+
+		visitCheck(i, visited);
+		for (i = 0; i < vertexCount; i++) {
+			if (visited[i] == false && edges[i].size() > 0) {
 				return false;
 			}
 		}
@@ -97,35 +115,137 @@ public class MyUndirectedGraph implements A3Graph {
 
 	@Override
 	public List<List<Integer>> connectedComponents() {
-		for (int i = 0; i < vertexCount; i+=2) {
-			int status = 0;
-			for (int j = status; j < vertexCount; j++) {
-				if (!edges[j].isEmpty()) {
-					cc.get(i).add(graph.get(j));
-				}
-				else if() {
-					
-				}
-				else {
-					cc.get(i+1).add(graph.get(j));
-					status = j;
-					break;
-				}
+		int level = 0;
+
+		Boolean visited[] = new Boolean[vertexCount];
+		for (int i = 0; i < vertexCount; i++) {
+			visited[i] = false;
+		}
+
+		for (int i = 0; i < vertexCount; i++) {
+			if (visited[i] == false) {
+				visitCheckLevel(i, visited, level);
+				level++;
 			}
 		}
 		return null;
 	}
 
+	private void visitCheckLevel(int vertex, Boolean visited[], int level) {
+		visited[vertex] = true;
+		int n;
+		Iterator<Integer> it = edges[vertex].iterator();
+		while (it.hasNext()) {
+			n = it.next();
+			if (!visited[n]) {
+				cc.get(level).add(n);
+				visitCheckLevel(n, visited, level);
+			}
+		}
+	}
+
+	private void visitCheck(int vertex, Boolean visited[]) {
+		visited[vertex] = true;
+		int n;
+		Iterator<Integer> it = edges[vertex].iterator();
+		while (it.hasNext()) {
+			n = it.next();
+			if (!visited[n]) {
+				visitCheck(n, visited);
+			}
+		}
+	}
+
 	@Override
 	public boolean hasEulerPath() {
-		// TODO Auto-generated method stub
-		return A3Graph.super.hasEulerPath();
+		if (isConnected() == false) {
+			return false;
+		}
+		int oddCount = 0;
+		for (int i = 0; i < vertexCount; i++) {
+			if (edges[i].size() % 2 != 0) {
+				oddCount++;
+			}
+		}
+
+		if (oddCount > 2) {
+			return false;
+		} else if (oddCount == 2) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
 	public List<Integer> eulerPath() {
-		// TODO Auto-generated method stub
+		cloneEuler = edges.clone();
+
+		Integer u = 0;
+		for (int i = 0; i < vertexCount; i++) {
+			if (cloneEuler[i].size() % 2 == 1) {
+				u = i;
+				break;
+			}
+		}
+
+		// Print tour starting from oddv
+		addEulerVertex(u);
 		return A3Graph.super.eulerPath();
 	}
 
+	private void addEulerVertex(Integer vertex) {
+		// Recur for all the vertices adjacent to this vertex
+		for (int i = 0; i < cloneEuler[vertex].size(); i++) {
+			Integer edge = cloneEuler[vertex].get(i);
+			// If edge u-v is a valid next edge
+			if (nextEdge(vertex, edge)) {
+				eulerPath.add(vertex);
+
+				// This edge is used so remove it now
+				removeEdge(vertex, edge);
+				addEulerVertex(edge);
+			}
+		}
+	}
+	
+	private void removeEdge(int source, int target) {
+		cloneEuler[source].remove(target); 
+        cloneEuler[source].remove(target); 
+	}
+	
+	private boolean nextEdge(int source, int target) {
+		if (cloneEuler[source].size() == 1) {
+			return true;
+		}
+		
+		boolean[] visited = new boolean[vertexCount]; 
+        int count1 = search(source, visited);  
+        removeEdge(source, target); 
+        visited = new boolean[vertexCount]; 
+        int count2 = search(source, visited);  
+        addEdgeBack(source, target);
+        if (count1 > count2) {
+        	return false;
+        }
+		return false; 
+	}
+	
+	private int search(int vertex, boolean visited[]) {
+		visited[vertex] = true; 
+        int count = 1; 
+        for (int adj : cloneEuler[vertex]) 
+        { 
+            if (!visited[adj]) 
+            { 
+                count = count + search(adj, visited); 
+            } 
+        } 
+        return count; 
+	}
+	
+	private void addEdgeBack(int source, int target) {
+		cloneEuler[source].add(target);
+		cloneEuler[target].add(source);
+	}
 }
