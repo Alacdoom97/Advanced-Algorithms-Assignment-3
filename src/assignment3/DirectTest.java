@@ -34,6 +34,8 @@ public class DirectTest {
 		}*/
 		
 		MySocialNetwork msn = new MySocialNetwork(15);
+		/*Note, the vertexes and edges of this graph are from the example in exercise 3, however each
+		 * number is decreased by one so 4 in here means 5 on the example. */
 		msn.addVertex(0);
 		msn.addVertex(1);
 		msn.addVertex(2);
@@ -71,11 +73,10 @@ public class DirectTest {
 		msn.addEdge(6, 9);
 		msn.addEdge(7, 9);
 		msn.addEdge(8, 9);
-		System.out.println(msn.numberOfPeopleAtFriendshipDistance(5, 2));
-		System.out.println(Arrays.toString(msn.level));
-		System.out.println("Furthest from " + 5  + " = " + msn.furthestDistanceInFriendshipRelationships(5));
-		List<Integer> possibleFriends = msn.possibleFriends(5);
-		System.out.print("Possible friends of " + 5 + ": ");
+		System.out.println(msn.numberOfPeopleAtFriendshipDistance(4, 2));
+		System.out.println("Furthest from " + 4  + " = " + msn.furthestDistanceInFriendshipRelationships(4));
+		List<Integer> possibleFriends = msn.possibleFriends(4);
+		System.out.print("Possible friends of " + 4 + ": ");
 		for(int i = 0; i < possibleFriends.size(); i++) {
 			System.out.print(possibleFriends.get(i));
 			System.out.print(" ");

@@ -136,7 +136,7 @@ public class MySocialNetwork extends MyUndirectedGraph implements A3SocialNetwor
 
 		}
 		for (int i = 0; i < l2Friends.size(); i++) {
-			if (aList.get(l2Friends.get(i)).size() < 3) {
+			if (edges[l2Friends.get(i)].size() < 3) {
 				l2Friends.remove(i);
 			}
 		}
@@ -145,15 +145,14 @@ public class MySocialNetwork extends MyUndirectedGraph implements A3SocialNetwor
 			List<Integer> children = edges[l2Friends.get(i)];
 			for (Integer c : children) {
 				if (edges[me].contains(c)) {
-					System.out.println(edges[me].contains(c));
 					sameFriends[i]++;
 				}
 			}
-			System.out.println(Arrays.toString(sameFriends));
-			for(int j = 0; j < sameFriends.length; j++) {
-				if(sameFriends[j] < 3) {
-					l2Friends.remove(i);
-				}
+
+		}
+		for (int j = sameFriends.length - 1; j >= 0; j--) {
+			if (sameFriends[j] < 3) {
+				l2Friends.remove(j);
 			}
 		}
 		return l2Friends;
