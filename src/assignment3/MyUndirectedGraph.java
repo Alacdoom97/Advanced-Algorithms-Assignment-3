@@ -189,20 +189,17 @@ public class MyUndirectedGraph implements A3Graph {
 			}
 		}
 
-		// Print tour starting from oddv
+		
 		addEulerVertex(u);
-		return A3Graph.super.eulerPath();
+		return eulerPath;
 	}
 
 	private void addEulerVertex(Integer vertex) {
-		// Recur for all the vertices adjacent to this vertex
+		
 		for (int i = 0; i < cloneEuler[vertex].size(); i++) {
 			Integer edge = cloneEuler[vertex].get(i);
-			// If edge u-v is a valid next edge
 			if (nextEdge(vertex, edge)) {
 				eulerPath.add(vertex);
-
-				// This edge is used so remove it now
 				removeEdge(vertex, edge);
 				addEulerVertex(edge);
 			}
